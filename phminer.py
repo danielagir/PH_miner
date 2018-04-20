@@ -14,11 +14,12 @@ def run(key, secret, uri, token):
     # Example request
     try:
         with open('output.csv', 'w', newline='', encoding='utf-8') as csvfile:
-            fieldnames = ['Name', 'Tagline']
+            fieldnames = ['Name', 'Tagline', 'logo URL', 'product URL', 'Upvotes', 'Comments']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=";", quoting=csv.QUOTE_ALL)
             writer.writeheader()
             for post in phc.get_todays_posts():
-                line = {'Name': post.name, 'Tagline': post.tagline}
+                line = {'Name': post.name, 'Tagline': post.tagline, 'logo URL': post.screenshot_url, 'product URL': post.redirect_url,
+                        'Upvotes': post.votes_count, 'Comments': post.comments_count}
                 writer.writerow(line)
 
     except ProductHuntError as e:

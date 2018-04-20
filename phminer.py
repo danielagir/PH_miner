@@ -1,6 +1,7 @@
 import os
 
 import yaml
+import csv
 from ph_py import ProductHuntClient
 from ph_py.error import ProductHuntError
 
@@ -12,8 +13,14 @@ def run(key, secret, uri, token):
 
     # Example request
     try:
-        for post in phc.get_todays_posts():
-            print(post.name)
+        with open('output.csv', 'w', newline='', encoding='utf-8') as csvfile:
+            fieldnames = ['Name', 'Tagline']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=";", quoting=csv.QUOTE_ALL)
+            writer.writeheader()
+            for post in phc.get_todays_posts():
+                line = {'Name': post.name, 'Tagline': post.tagline}
+                writer.writerow(line)
+
     except ProductHuntError as e:
         print(e.error_message)
         print(e.status_code)
